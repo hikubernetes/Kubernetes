@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wordpress-mysql-deployment
+  labels:
+    app: wordpress-mysql
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+  selector: 
+    matchLabels:
+      app: wordpress-mysql
+  template:
+    metadata:
+      labels:
+        app: wordpress-mysql
+    spec:
+      containers:
+      - image: mysql:5.6
+        name: wordpress-mysql
+        args:
+          - "--ignore-db-dir=lost+found"
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+           secretKeyRef:
+            name: mysql-pass
+            key: password
+        ports:
+        - containerPort: 3306
+          name: mysql
+        volumeMounts: 
+        - name: mysql-persistent-storge
+          mountPath: /var/lib/mysql
+      volumes:
+        - name: mysql-persistent-storge
+          persistentVolumeClaim:
+            claimName: pvc-mysql
+  
+  

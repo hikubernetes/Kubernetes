@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  namespace: default
+  name: pv-wordpress
+spec:
+  capacity:
+    storage: 2Gi
+  accessModes:
+  - ReadWriteMany
+  nfs:
+    path: /data
+    server: 192.168.175.5
+

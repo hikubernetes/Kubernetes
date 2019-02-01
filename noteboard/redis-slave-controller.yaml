@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: redis-slave
+spec:
+  replicas: 2
+  selector: # RC通过spec.selector来筛选要控制的Pod
+    name: redis-slave
+  template:
+    metadata:
+      name: redis-slave
+      labels: # Pod的label，可以看到这个label与spec.selector相同
+        name: redis-slave
+    spec:
+      containers:
+      - name: redis-slave
+        image: hikubernetes/guestbook-redis-slave
+        env:
+        - name: GET_HOSTS_FROM
+          value: env
+        ports:
+        - containerPort: 6379
